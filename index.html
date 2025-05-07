@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Simulator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e5ddd5;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23bbb' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f5f1ee;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-header {
+            background-color: #075e54;
+            color: white;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #ccc;
+            border-radius: 50%;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .chat-name {
+            font-weight: bold;
+        }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            border-radius: 7.5px;
+            position: relative;
+            clear: both;
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+            margin-top: 2px;
+        }
+
+        .message-left {
+            float: left;
+            background-color: white;
+        }
+
+        .message-left:after {
+            content: "";
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-right-color: white;
+            border-left: 0;
+            border-top: 0;
+        }
+
+        .message-right {
+            float: right;
+            background-color: #dcf8c6;
+        }
+
+        .message-right:after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 0;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-left-color: #dcf8c6;
+            border-right: 0;
+            border-top: 0;
+        }
+
+        .chat-footer {
+            display: flex;
+            padding: 10px;
+            background-color: #f0f0f0;
+            align-items: center;
+        }
+
+        .input-message {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
+
+        .send-btn {
+            background-color: #128c7e;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .check-mark {
+            display: inline-block;
+            margin-left: 4px;
+            color: #4fc3f7;
+        }
+
+        .controls {
+            padding: 10px;
+            text-align: center;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .btn {
+            background-color: #128c7e;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="avatar" id="avatar-initial">P</div>
+            <div class="chat-name" id="chat-name">Persona</div>
+        </div>
+        <div class="controls">
+            <button class="btn" id="generate-btn">Generar Conversación</button>
+            <button class="btn" id="clear-btn">Limpiar</button>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Messages will be generated here -->
+        </div>
+        <div class="chat-footer">
+            <input type="text" class="input-message" placeholder="Escribe un mensaje...">
+            <button class="send-btn">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // List of Mexican names
+        const mexicanNames = {
+            male: [
+                "Alejandro", "Carlos", "Miguel", "Juan", "José", "Fernando", "Ricardo", "Eduardo", 
+                "Roberto", "Francisco", "Manuel", "Antonio", "Daniel", "Javier", "Héctor", 
+                "Enrique", "Emilio", "Raúl", "Pedro", "Arturo", "Guillermo", "Adrián", 
+                "Luis", "Jorge", "Alfredo", "Víctor", "César", "Mario", "Gabriel", "Óscar"
+            ],
+            female: [
+                "María", "Guadalupe", "Ana", "Sofía", "Fernanda", "Valentina", "Mariana", 
+                "Daniela", "Alejandra", "Regina", "Lucía", "Paula", "Ximena", "Valeria", 
+                "Camila", "Isabella", "Elena", "Gabriela", "Jimena", "Natalia", "Claudia", 
+                "Silvia", "Patricia", "Verónica", "Laura", "Carmen", "Rosa", "Adriana", 
+                "Cristina", "Diana"
+            ]
+        };
+        
+        // Function to get random name
+        function getRandomName() {
+            // 50/50 chance for male or female name
+            const gender = Math.random() < 0.5 ? "male" : "female";
+            const names = mexicanNames[gender];
+            return names[Math.floor(Math.random() * names.length)];
+        }
+        // Tracery grammar definition
+        const grammars = {
+            e: {
+                "origin": ["#persona1#", "#persona2#"],
+                "conversacion": ["#replica#", "#complemento#", "#respuesta#", "¿#pregunta#?", "#emojistristes#", "#emojisenojados#", "#replica# #emojistristes#", "#complemento# #emojistristes#", "#respuesta# #emojistristes#", "¿#pregunta#? #emojistristes#", "#emojistristes#", "#emojisenojados#", "#replica# #emojisenojados#", "#complemento# #emojisenojados#", "#respuesta# #emojisenojados#", "¿#pregunta#? #emojisenojados#", "#emojistristes#", "#emojisenojados#", "¿#questiones#?", "¿#questiones#? #emojisenojados#", "¿#questiones#? #emojistristes#"],
+                "persona1": ["#conversacion#"],
+                "persona2": ["#conversacion#"],
+                "replica": ["No es que no me guste o que no me haya gustado", "No es que no quiera ayudar pero es complicado", "Porque dijimos que era la despedida", "Pues fueron varias despedidas", "Te hice daño cruzándome en tu vida", "Sabes que me preocupo por ti", "Perdón por haberme involucrado tan profundo contigo", "Ya no puedo mantener la interacción tan íntima", "Siempre me estas pidiendo algo", "Y te he demostrado que puedo ser tu amigo", "Pero si no se puede la interacción mejor aquí la dejamos", "No eres tu soy yo", "Ya es mejor dejarlo como está", "Yo sí hubiera hecho todo por ti, pero tú nunca estuviste a mi nivel", "No es que no me duela, es que no me voy a rebajar", "Al menos yo no fui quien huyó cuando se puso difícil", "Nunca pedí mucho, solo que no fueras tú", "Si alguien arruinó esto, fuiste tú por no saber lo que tenías", "Te di más de lo que merecías y aún así te quejabas", "Tú me perdiste, no al revés", "No puedes con alguien como yo y lo sabes", "Siempre estuve por encima de esta relación", "Piénsalo bien, no vas a encontrar a alguien como yo", "¿Te das cuenta que sin mí eras nadie?", "Todo lo bueno que viviste después fue por lo que aprendiste conmigo", "A veces me sorprendo de haber aguantado tanto", "Yo era el premio, pero no supiste jugar", "No me dolió perderte, me dolió que te creyeras tan importante", "Si no fuera por mí, ni siquiera sabrías lo que es que te quieran bien", "Te di estilo, estructura y traumas... y aún así me fallaste", "Hasta tus amigos sabían que no estabas a mi altura", "Yo puse la intensidad, tú solo estabas ahí por costumbre", "No soy difícil, solo tengo estándares que tú no cumpliste"],
+                "complemento": ["Cuál fue la despedida", "Cuál contó como despedida", "Es esta ya la despedida", "Me rompes el corazón", "Me estás rompiendo el corazón", "A veces cuando te conviene", "Wey neta no vas a responder", "Te estoy diciendo que respondas algo", "Y neta no te vuelvo a molestar"],
+                "respuesta": ["No quiero que necesites de mí porque no te lo puedo dar", "Ya estuvo suave", "Pero sé que no será la última y no quiero que esto sea mas difícil", "Esta conversación ya la hemos tenido", "Sólo quiero acabar con esto ya me estás poniendo mal", "Pero tu actitud fue lo que mandó todo a la chingada", "Neta ya no me busques", "Perdón wey sólo quiero saber que estarás bien", "Por los buenos tiempos", "Ya sé que no gira tu vida entorno a mí"],
+                "pregunta": ["Es lo último lo juro", "Eso no es necesitar a alguien", "Por el tiempo de amistad los buenos momentos", "Qué cuesta escribir unas palabras", "También hice cosas por ti", "Puedo demostrar que es lo último", "Adiós cuídate", "Qué carajos dijiste", "Pues se acabo", "Vete con la conciencia tranquila", "La cagaste primero desde un puto inicio", "Por el cariño que te tuve", "Siempre fui quien envió mensaje", "Dos o tres palabras invéntalas si quieres", "Para que me vaya tranquila también", "Un verdadero final para no buscarte", "Perdón por arrastrarte a esto"],
+                "questiones": ["En verdad piensas eso", "Y ya se acabó", "En verdad ya no me quieres", "Cómo pudiste hacer eso", "Ya no te importa esto", "Y lo nuestro", "Apoco ya fue", "Qué signifiqué para ti","No sé si me duele más perderte o haberte tenido", "Pensé que éramos algo más que esto", "¿Y ahora qué se supone que haga con todo esto que siento?", "Ya no quiero seguir rogando por migajas", "¿Esto era amor o solo costumbre?", "Te juro que intenté entenderte, pero me perdí", "No se trata de orgullo, se trata de dignidad", "Esto no es cierre, esto es abandono disfrazado", "Tú seguiste con tu vida, yo me quedé con las preguntas", "No puedes soltarme y al mismo tiempo esperarme", "Perdón si alguna vez creí que esto era real", "No te odio, me duele demasiado para eso", "Te fuiste sin cerrar la puerta y ahora todo duele", "Me quitaste la paz y ni cuenta te diste", "No sé si volver o aprender a olvidar", "¿Dónde quedaron todas esas promesas?", "No quiero que vuelvas, quiero que nunca te hubieras ido así", "Fuiste hogar hasta que te volviste incendio", "Lo nuestro se rompió en silencio", "No quería un final feliz, solo uno sincero"],
+                "emojistristes": ["😦", "😧", "😨", "😰", "😥", "😢", "😭", "😱", "😖", "😣", "😞", "😓", "😩", "😫"],
+                "emojisenojados": ["😤", "😡", "😠", "🤬", "😈", "👿", "💀", "☠️", "💩", "🤡", "👹", "👺", "👻"]
+            }
+        };
+        // Simple Tracery implementation
+        function expandRule(grammar, rule) {
+            if (!rule.startsWith('#') || !rule.endsWith('#')) {
+                return rule;
+            }
+            
+            const key = rule.substring(1, rule.length - 1);
+            if (!grammar[key]) {
+                return rule;
+            }
+            
+            const options = grammar[key];
+            const selected = options[Math.floor(Math.random() * options.length)];
+            
+            return selected.replace(/#(\w+)#/g, (match, key) => {
+                return expandRule(grammar, `#${key}#`);
+            });
+        }
+
+        // Get DOM elements
+        const chatBody = document.getElementById('chat-body');
+        const generateBtn = document.getElementById('generate-btn');
+        const clearBtn = document.getElementById('clear-btn');
+
+        // Format current time
+        function getCurrentTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            
+            // Pad with leading zero if needed
+            hours = hours < 10 ? `0${hours}` : hours;
+            minutes = minutes < 10 ? `0${minutes}` : minutes;
+            
+            return `${hours}:${minutes}`;
+        }
+
+        // Create a message element
+        function createMessage(text, isRight = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message message-${isRight ? 'right' : 'left'}`;
+            
+            messageDiv.innerHTML = `
+                ${text}
+                <div class="message-time">
+                    ${getCurrentTime()} 
+                    ${isRight ? '<span class="check-mark">✓✓</span>' : ''}
+                </div>
+            `;
+            
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        // Generate a conversation
+        function generateConversation() {
+            // Clear existing messages
+            chatBody.innerHTML = '';
+            
+            // Number of message pairs to generate (4-10)
+            const numPairs = Math.floor(Math.random() * 7) + 4;
+            
+            // Generate conversation with delays
+            let messageIndex = 0;
+            
+            function addNextMessage() {
+                if (messageIndex < numPairs * 2) {
+                    // Determine if it's a message from left or right
+                    const isRight = messageIndex % 2 === 1;
+                    
+                    // Generate message from grammar
+                    const text = expandRule(grammars.e, '#conversacion#');
+                    
+                    // Add message
+                    createMessage(text, isRight);
+                    
+                    // Schedule next message
+                    messageIndex++;
+                    const delay = Math.floor(Math.random() * 2000) + 4000; // 4-6 seconds as requested
+                    if (messageIndex < numPairs * 2) {
+                        setTimeout(addNextMessage, delay);
+                    }
+                }
+            }
+            
+            // Start the conversation
+            addNextMessage();
+        }
+
+        // Event listeners
+        generateBtn.addEventListener('click', generateConversation);
+        
+        clearBtn.addEventListener('click', function() {
+            chatBody.innerHTML = '';
+        });
+
+        // Set random name on load
+        function setRandomName() {
+            const randomName = getRandomName();
+            document.getElementById('chat-name').textContent = randomName;
+            document.getElementById('avatar-initial').textContent = randomName.charAt(0);
+        }
+        
+        // Set initial random name
+        setRandomName();
+        
+        // Add event to change name when generating new conversation
+        generateBtn.addEventListener('click', setRandomName);
+        
+        // Initial conversation
+        generateConversation();
+    </script>
+</body>
+</html>
